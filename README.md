@@ -22,9 +22,9 @@ docker ps -a
 You should get a similar output like this:
 
 ```
-CONTAINER ID   IMAGE                        COMMAND                  CREATED         STATUS         PORTS                                                      NAMES
-3e43a74a585d   cluster-apache-spark:3.5.3   "/bin/bash /start-sp…"   3 seconds ago   Created                                                                   spark-docker-spark-worker-a-1
-4195b53e7543   cluster-apache-spark:3.5.3   "/bin/bash /start-sp…"   3 seconds ago   Up 2 seconds   7000/tcp, 0.0.0.0:7077->7077/tcp, 0.0.0.0:9090->8080/tcp   spark-docker-spark-master-1
+CONTAINER ID   IMAGE                        COMMAND                  CREATED          STATUS          PORTS                                                      NAMES
+6bddbd3b5cfa   cluster-apache-spark:3.5.3   "/bin/bash /start-sp…"   11 minutes ago   Up 11 minutes   7077/tcp, 0.0.0.0:7001->7000/tcp, 0.0.0.0:9091->8080/tcp   spark-docker-spark-worker-a-1
+4195b53e7543   cluster-apache-spark:3.5.3   "/bin/bash /start-sp…"   15 minutes ago   Up 15 minutes   7000/tcp, 0.0.0.0:7077->7077/tcp, 0.0.0.0:9090->8080/tcp   spark-docker-spark-master-1
 ```
 
 ## Container exposed ports
@@ -58,8 +58,6 @@ spark = SparkSession.builder \
     .appName("MySparkApplication") \
     .master("spark://localhost:7077") \
     .getOrCreate()
-    
-print(spark)
 ```
 
 
