@@ -1,8 +1,24 @@
-FROM openjdk:11.0.16-jre-slim-buster as builder
+FROM openjdk:11.0.16-jre-slim-buster AS builder
 
 # Add Dependencies for PySpark
-RUN apt-get update && apt-get install -y curl vim wget software-properties-common ssh net-tools ca-certificates python3 python3-pip python3-numpy python3-matplotlib python3-scipy python3-pandas python3-simpy
+RUN apt-get update && apt-get install -y curl wget gcc make vim software-properties-common ssh net-tools ca-certificates zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev libbz2-dev
 
+RUN wget https://www.python.org/ftp/python/3.11.10/Python-3.11.10.tgz && \
+	tar -xf Python-3.11.10.tgz && \
+	cd Python-3.11.10 && \
+	./configure --enable-optimizations && \
+	make -j$(nproc) && \
+	make altinstall && \
+	cd .. && rm -rf Python-3.11.10 Python-3.11.10.tgz
+
+# Step 3: Set Python 3.11 as default
+RUN rm -rf /usr/bin/python3
+RUN ln -s /usr/local/bin/python3.11 /usr/bin/python3
+
+# Verify installation
+RUN python3 --version
+
+RUN apt-get update && apt-get install -y python3-pip python3-numpy python3-matplotlib python3-scipy python3-pandas python3-simpy
 RUN update-alternatives --install "/usr/bin/python" "python" "$(which python3)" 1
 
 # Fix the value of PYTHONHASHSEED
@@ -18,11 +34,10 @@ RUN wget --no-verbose -O apache-spark.tgz "https://archive.apache.org/dist/spark
 	&& rm apache-spark.tgz
 
 RUN apt update \
-	&& apt install python3-pip \
 	&& pip3 install pyspark
 
 
-FROM builder as apache-spark
+FROM builder AS apache-spark
 
 WORKDIR /opt/spark
 

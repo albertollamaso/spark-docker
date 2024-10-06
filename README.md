@@ -4,7 +4,7 @@ Spark standalone cluster with docker compose
 
 1. Build locally the docker image
 ```
-docker build -t cluster-apache-spark:3.5.3
+docker build -t cluster-apache-spark:3.5.3 .
 ```
 
 2. Deploy the Spark Standalone cluster
